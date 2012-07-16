@@ -74,7 +74,7 @@ yields['vbf']['total'] = sum(
 def render(the_yield):
     if isinstance(the_yield, int):
         return str(the_yield)
-    return r'$$ %0.2f \pm %0.2f $$' % (the_yield.nominal_value,
+    return r'$ %0.2f \pm %0.2f $' % (the_yield.nominal_value,
                                        the_yield.std_dev())
 
 # flatten dictionary and stringify yields
