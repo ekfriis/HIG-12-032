@@ -45,7 +45,6 @@ def rebin(histo):
     return histo
 ltt_combined = views.FunctorView(ltt_combined, rebin)
 
-
 # Make views of individual backgrounds
 channels = {
     'llt' : {},
@@ -61,6 +60,7 @@ main_irreducible = {
     'legendstyle' : 'f',
     'format' : 'hist',
     # Same as Z+jets
+    'fillstyle' : 1001,
     'fillcolor' : '#FFCC66',
     'linecolor' : '#000000',
     'linewidth' : 2,
@@ -69,6 +69,7 @@ next_irreducible = {
     'legendstyle' : 'f',
     'format' : 'hist',
     # Same as W+jets
+    'fillstyle' : 1001,
     'fillcolor' : '#990000',
     'linecolor' : '#000000',
     'linewidth' : 2,
@@ -77,6 +78,7 @@ third_irreducible = {
     'legendstyle' : 'f',
     'format' : 'hist',
     # Same as ttbar
+    'fillstyle' : 1001,
     'fillcolor' : '#9999CC',
     'linecolor' : '#000000',
     'linewidth' : 2,
@@ -87,6 +89,7 @@ fakes = {
     # Same as QCD
     'fillcolor' : '#FFCCFF',
     'linecolor' : '#000000',
+    'fillstyle' : 1001,
     'linewidth' : 2,
 }
 signal = {
@@ -203,4 +206,66 @@ vh_legend.Draw()
 canvas.Update()
 canvas.SaveAs('zh.pdf')
 
-tt = io.open('UPDATE-LIMITS/cmb/common/vhtt.input_8TeV.root')
+# Make tau_h tau_h plots
+tt = io.open('UPDATE-LIMITS/cmb/common/htt_tt.input_8TeV.root')
+
+boost = Subdir(tt, 'tauTau_boost')
+vbf = Subdir(tt, 'tauTau_vbf')
+
+channels['boost']['ztt'] = Style(Getter(boost, 'ZTT', 'Z #rightarrow #tau#tau'), **main_irreducible)
+
+channels['boost']['ewk'] = Style(Sum(
+    Getter(boost, 'ZJ', 'Electroweak'),
+    Getter(boost, 'ZL', 'Electroweak'),
+    Getter(boost, 'W', 'Electroweak')), **next_irreducible)
+
+channels['boost']['qcd'] = Style(Getter(boost, 'QCD', 'Multijet'), **fakes)
+channels['boost']['ttbar'] = Style(Getter(boost, 'TT', 'ttbar'), **third_irreducible)
+channels['boost']['signal'] = Style(ScaleView(Sum(
+    Getter(boost, 'ggH125', '(5#times) H125'),
+    Getter(boost, 'qqH125', '(5#times) H125'),
+    Getter(boost, 'VH125', '(5#times) H125')), 5), **signal)
+
+boost_stack = views.StackView(
+    *[channels['boost'][x] for x in ['ttbar', 'ewk', 'qcd', 'ztt', 'signal']])
+
+legend = make_a_legend(4)
+boost = boost_stack.Get(None)
+boost.Draw()
+boost.GetHistogram().GetXaxis().SetRangeUser(0, 200)
+boost.GetHistogram().GetXaxis().SetTitle("m_{vis} (GeV)")
+boost.GetHistogram().GetYaxis().SetTitle("Events")
+blurb = add_cms_blurb('8', '4.9')
+legend.AddEntry(boost)
+legend.Draw()
+canvas.Update()
+canvas.SaveAs('boost.pdf')
+
+channels['vbf']['ztt'] = Style(Getter(vbf, 'ZTT', 'Z #rightarrow #tau#tau'), **main_irreducible)
+
+channels['vbf']['ewk'] = Style(Sum(
+    Getter(vbf, 'ZJ', 'Electroweak'),
+    Getter(vbf, 'ZL', 'Electroweak'),
+    Getter(vbf, 'W', 'Electroweak')), **next_irreducible)
+
+channels['vbf']['qcd'] = Style(Getter(vbf, 'QCD', 'Multijet'), **fakes)
+channels['vbf']['ttbar'] = Style(Getter(vbf, 'TT', 'ttbar'), **third_irreducible)
+channels['vbf']['signal'] = Style(ScaleView(Sum(
+    Getter(vbf, 'ggH125', '(5#times) H125'),
+    Getter(vbf, 'qqH125', '(5#times) H125'),
+    Getter(vbf, 'VH125', '(5#times) H125')), 5), **signal)
+
+vbf_stack = views.StackView(
+    *[channels['vbf'][x] for x in ['ttbar', 'ewk', 'qcd', 'ztt', 'signal']])
+
+legend = make_a_legend(4)
+vbf = vbf_stack.Get(None)
+vbf.Draw()
+vbf.GetHistogram().GetXaxis().SetRangeUser(0, 200)
+vbf.GetHistogram().GetXaxis().SetTitle("m_{vis} (GeV)")
+vbf.GetHistogram().GetYaxis().SetTitle("Events")
+blurb = add_cms_blurb('8', '4.9')
+legend.AddEntry(vbf)
+legend.Draw()
+canvas.Update()
+canvas.SaveAs('vbf.pdf')
