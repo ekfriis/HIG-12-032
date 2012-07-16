@@ -102,6 +102,14 @@ signal = {
     'linecolor' : '#1C1C76',
     'name' : "VH",
 }
+data =  {
+    'markerstyle' : 20,
+    'markersize' : 3,
+    'markercolor' : '#000000',
+    'legendstyle' : 'pe',
+    'format' : 'pe',
+    'name' : "Observed",
+}
 
 Style = views.StyleView
 Subdir = views.SubdirectoryView
@@ -209,10 +217,16 @@ canvas.SaveAs('zh.pdf')
 # Make tau_h tau_h plots
 tt = io.open('UPDATE-LIMITS/cmb/common/htt_tt.input_8TeV.root')
 
-boost = Subdir(tt, 'tauTau_boost')
-vbf = Subdir(tt, 'tauTau_vbf')
+from FinalStateAnalysis.PlotTools.BlindView import BlindView, blind_in_range
+
+boost = BlindView(Subdir(tt, 'tauTau_boost'), '.*data_obs',
+                  blinding=blind_in_range(100, 140))
+
+vbf = BlindView(Subdir(tt, 'tauTau_vbf'), '.*data_obs',
+                blinding=blind_in_range(100, 140))
 
 channels['boost']['ztt'] = Style(Getter(boost, 'ZTT', 'Z #rightarrow #tau#tau'), **main_irreducible)
+channels['boost']['data'] = Style(Getter(boost, 'data_obs', 'Observed'), **data)
 
 channels['boost']['ewk'] = Style(Sum(
     Getter(boost, 'ZJ', 'Electroweak'),
@@ -229,13 +243,16 @@ channels['boost']['signal'] = Style(ScaleView(Sum(
 boost_stack = views.StackView(
     *[channels['boost'][x] for x in ['ttbar', 'ewk', 'qcd', 'ztt', 'signal']])
 
-legend = make_a_legend(4)
+legend = make_a_legend(6)
 boost = boost_stack.Get(None)
 boost.Draw()
-boost.GetHistogram().GetXaxis().SetRangeUser(0, 200)
+boost_data = channels['boost']['data'].Get(None)
+boost_data.Draw('same,pe')
+boost.GetHistogram().GetXaxis().SetRangeUser(0, 300)
 boost.GetHistogram().GetXaxis().SetTitle("m_{vis} (GeV)")
 boost.GetHistogram().GetYaxis().SetTitle("Events")
 blurb = add_cms_blurb('8', '4.9')
+legend.AddEntry(boost_data)
 legend.AddEntry(boost)
 legend.Draw()
 canvas.Update()
@@ -247,6 +264,7 @@ channels['vbf']['ewk'] = Style(Sum(
     Getter(vbf, 'ZJ', 'Electroweak'),
     Getter(vbf, 'ZL', 'Electroweak'),
     Getter(vbf, 'W', 'Electroweak')), **next_irreducible)
+channels['vbf']['data'] = Style(Getter(vbf, 'data_obs', 'Observed'), **data)
 
 channels['vbf']['qcd'] = Style(Getter(vbf, 'QCD', 'Multijet'), **fakes)
 channels['vbf']['ttbar'] = Style(Getter(vbf, 'TT', 'ttbar'), **third_irreducible)
@@ -258,13 +276,16 @@ channels['vbf']['signal'] = Style(ScaleView(Sum(
 vbf_stack = views.StackView(
     *[channels['vbf'][x] for x in ['ttbar', 'ewk', 'qcd', 'ztt', 'signal']])
 
-legend = make_a_legend(4)
+legend = make_a_legend(6)
 vbf = vbf_stack.Get(None)
 vbf.Draw()
-vbf.GetHistogram().GetXaxis().SetRangeUser(0, 200)
+vbf_data = channels['vbf']['data'].Get(None)
+vbf_data.Draw('same,pe')
+vbf.GetHistogram().GetXaxis().SetRangeUser(0, 300)
 vbf.GetHistogram().GetXaxis().SetTitle("m_{vis} (GeV)")
 vbf.GetHistogram().GetYaxis().SetTitle("Events")
 blurb = add_cms_blurb('8', '4.9')
+legend.AddEntry(vbf_data)
 legend.AddEntry(vbf)
 legend.Draw()
 canvas.Update()
