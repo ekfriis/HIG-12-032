@@ -2,13 +2,12 @@
 
 # Setup datacard working areas
 
-VHMASSES="120 125 130 135 140" 
 MASSES="110 115 120 125 130 135 140" 
 DCs=$CMSSW_BASE/src/auxiliaries/datacards/
 
-#setup-htt.py -i $DCs -o STANDARD-LIMITS $MASSES --channels="em et mt mm"
-#setup-htt.py -i $DCs -o UPDATE-LIMITS $VHMASSES --channels="vhtt tt"
-#setup-htt.py -i $DCs -o ALL-LIMITS $VHMASSES --channels="vhtt tt em et mt mm"
+setup-htt.py -i $DCs -o STANDARD-LIMITS $MASSES --channels="em et mt mm"
+setup-htt.py -i $DCs -o UPDATE-LIMITS $MASSES --channels="vhtt tt"
+setup-htt.py -i $DCs -o ALL-LIMITS $MASSES --channels="vhtt tt em et mt mm"
 
 # Make a megacard to extract tables out of
 cd UPDATE-LIMITS/cmb/125
