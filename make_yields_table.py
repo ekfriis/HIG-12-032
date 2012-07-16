@@ -37,13 +37,13 @@ yields['ltt']['zz'] = megacard.get_rate('ltt*', 'ZZ')
 yields['ltt']['fakes'] = megacard.get_rate('ltt*', 'FakeRate')
 yields['ltt']['VH'] = megacard.get_rate('ltt*', 'WH')
 yields['ltt']['VHww'] = 0
-yields['ltt']['total'] = yields['llt']['wz'] + yields['llt']['zz'] + yields['llt']['fakes']
+yields['ltt']['total'] = yields['ltt']['wz'] + yields['ltt']['zz'] + yields['ltt']['fakes']
 
 yields['zh']['zz'] = megacard.get_rate('ZH*', 'ZZ')
 yields['zh']['fakes'] = megacard.get_rate('ZH*', 'Zjets')
 yields['zh']['VH'] = megacard.get_rate('ZH*', 'VH')
 yields['zh']['VHww'] = megacard.get_rate('ZH*', 'VH_hww')
-yields['zh']['total'] = yields['llt']['zz'] + yields['llt']['fakes']
+yields['zh']['total'] = yields['zh']['zz'] + yields['zh']['fakes']
 
 yields['boost']['fakes'] = megacard.get_rate('boost*', 'QCD')
 yields['boost']['ZTT'] = megacard.get_rate('boost*', 'ZTT')
@@ -87,8 +87,8 @@ vh_template = r'''
     \begin{tabular}{l | c | c | c}
       Process & $$\ell \ell \tau_h$$ & $$\ell \tau_h \tau_h$$  & $$ 4L $$ \\
       \hline
-      Fakes & $lltfakes & $lttfakes & \multirow{2}{*}{0} \\
-      WZ & $lltwz & $lttwz & $zhfakes \\
+      Fakes & $lltfakes & $lttfakes & \multirow{2}{*}{$zhfakes} \\
+      WZ & $lltwz & $lttwz & \\
       \hline
       ZZ & $lltzz & $lttzz &  $zhzz \\
       \hline
@@ -121,7 +121,7 @@ tt_template = r'''
       ggH$$\to\tau\tau (m_H=125\GeV)$$ & $boostggH & $vbfggH \\
       qqH$$\to\tau\tau (m_H=125\GeV)$$ & $boostqqH & $vbfqqH \\
       \hline
-      Observed & & & \\
+      Observed & & \\
     \end{tabular}
 '''
 
