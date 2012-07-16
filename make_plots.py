@@ -129,7 +129,7 @@ def Getter(view, histoname, title=None):
     else:
         return views.PathModifierView(view, doot)
 
-signal_label = '(5 #times) VH125'
+signal_label = '(5#times) VH125'
 
 channels['llt']['wz'] = Style(Getter(llt_combined, 'wz', 'WZ'), **main_irreducible)
 channels['llt']['zz'] = Style(Getter(llt_combined, 'zz', 'ZZ'), **next_irreducible)
@@ -249,7 +249,7 @@ boost.Draw()
 boost_data = channels['boost']['data'].Get(None)
 boost_data.Draw('same,pe')
 boost.GetHistogram().GetXaxis().SetRangeUser(0, 300)
-boost.GetHistogram().GetXaxis().SetTitle("m_{vis} (GeV)")
+boost.GetHistogram().GetXaxis().SetTitle("m_{#tau#tau} (GeV)")
 boost.GetHistogram().GetYaxis().SetTitle("Events")
 blurb = add_cms_blurb('8', '4.9')
 legend.AddEntry(boost_data)
@@ -282,7 +282,7 @@ vbf.Draw()
 vbf_data = channels['vbf']['data'].Get(None)
 vbf_data.Draw('same,pe')
 vbf.GetHistogram().GetXaxis().SetRangeUser(0, 300)
-vbf.GetHistogram().GetXaxis().SetTitle("m_{vis} (GeV)")
+vbf.GetHistogram().GetXaxis().SetTitle("m_{#tau#tau} (GeV)")
 vbf.GetHistogram().GetYaxis().SetTitle("Events")
 blurb = add_cms_blurb('8', '4.9')
 legend.AddEntry(vbf_data)
