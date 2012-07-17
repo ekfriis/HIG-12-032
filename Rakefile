@@ -11,7 +11,7 @@ def make_task(directory)
   return output
 end
 
-masses = Array[120, 125, 130, 135, 140]
+masses = Array[115, 120, 125, 130, 135, 140]
 
 task :newlimits => []
 
@@ -25,23 +25,23 @@ masses.each do |mass|
   multitask :megalimits => make_task("ALL-LIMITS/cmb/#{mass}")
 end
 
-take :newplots => [] do |t|
+task :newplots => [] do |t|
   chdir('UPDATE-LIMITS') do 
-    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_htt_layout.py ltt"
-    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_htt_layout.py llt"
-    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_htt_layout.py cmb"
-    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_htt_layout.py 4l"
-    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_htt_layout.py tt"
+    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_vhtt_layout.py ltt"
+    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_vhtt_layout.py llt"
+    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_vhtt_layout.py cmb"
+    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_vhtt_layout.py 4l"
+    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_vhtt_layout.py tt"
   end
 end
 
-take :oldplots => [] do |t|
+task :oldplots => [] do |t|
   chdir('STANDARD-LIMITS') do 
     sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_htt_layout.py cmb"
   end
 end
 
-take :megaplots => [] do |t|
+task :megaplots => [] do |t|
   chdir('ALL-LIMITS') do 
     sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_htt_layout.py cmb"
   end
