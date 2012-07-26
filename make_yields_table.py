@@ -56,7 +56,7 @@ yields['boost']['VH'] = megacard.get_rate('boost*', 'VH')
 yields['boost']['ggH'] = megacard.get_rate('boost*', 'ggH')
 yields['boost']['qqH'] = megacard.get_rate('boost*', 'qqH')
 yields['boost']['total'] = sum(
-    yields['boost'][x] for x in ['fakes', 'ZJ', 'ZL', 'TT', 'VV', 'W'])
+    yields['boost'][x] for x in ['fakes', 'ZJ', 'ZL', 'TT', 'VV', 'W', 'ZTT'])
 
 yields['vbf']['fakes'] = megacard.get_rate('vbf*', 'QCD')
 yields['vbf']['ZTT'] = megacard.get_rate('vbf*', 'ZTT')
@@ -69,7 +69,7 @@ yields['vbf']['VH'] = megacard.get_rate('vbf*', 'VH')
 yields['vbf']['ggH'] = megacard.get_rate('vbf*', 'ggH')
 yields['vbf']['qqH'] = megacard.get_rate('vbf*', 'qqH')
 yields['vbf']['total'] = sum(
-    yields['vbf'][x] for x in ['fakes', 'ZJ', 'ZL', 'TT', 'VV', 'W'])
+    yields['vbf'][x] for x in ['fakes', 'ZJ', 'ZL', 'TT', 'VV', 'W', 'ZTT'])
 
 def render(the_yield):
     if isinstance(the_yield, int):

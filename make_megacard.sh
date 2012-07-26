@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COMBO_DIR=$1
+COMBO_DIR=NEW-LIMITS
 
 combineCards.py \
   boost=$COMBO_DIR/cmb/125/htt_tt_0_8TeV.txt \

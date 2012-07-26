@@ -21,20 +21,20 @@ def add_cms_blurb(sqrts, intlumi, preliminary=True):
     label_text += " %s fb^{-1}" % (intlumi)
     return latex.DrawLatex(0.18,0.96, label_text);
 
-vh_7TeV = io.open('UPDATE-LIMITS/cmb/common/vhtt.input_7TeV.root')
-vh_8TeV = io.open('UPDATE-LIMITS/cmb/common/vhtt.input_8TeV.root')
+vh_7TeV = io.open('NEW-LIMITS/cmb/common/vhtt.input_7TeV.root')
+vh_8TeV = io.open('NEW-LIMITS/cmb/common/vhtt.input_8TeV.root')
 
 # We only care about 7 + 8 TeV
 vh_combined = views.SumView(vh_7TeV, vh_8TeV)
 
 # Now combine sub-channels
 llt_combined = views.SumView(*[
-    views.SubdirectoryView(vh_combined, x) for x in ['emt', 'mmt', 'eet']])
+    views.SubdirectoryView(vh_combined, x) for x in ['emt', 'mmt', ]])
 
 zh_combined = views.SumView(*[
     views.SubdirectoryView(vh_combined, x) for x in [
         'eeem_zh', 'eeet_zh', 'eemt_zh', 'eett_zh',
-        'mmem_zh', 'mmet_zh', 'mmmt_zh', 'mmtt_zh',
+        'mmme_zh', 'mmet_zh', 'mmmt_zh', 'mmtt_zh',
     ]])
 
 ltt_combined = views.SumView(*[
@@ -139,12 +139,12 @@ channels['llt']['signal'] = Title(ScaleView(
     signal_label)
 
 
-channels['ltt']['wz'] = Style(Getter(ltt_combined, 'WZ', 'WZ'), **main_irreducible)
-channels['ltt']['zz'] = Style(Getter(ltt_combined, 'ZZ', 'ZZ'), **next_irreducible)
-channels['ltt']['fakes'] = Style(Getter(ltt_combined, 'FakeRate', 'Non-prompt'), **fakes)
-channels['ltt']['signal'] = Title(ScaleView(
-    Style(Sum(Getter(ltt_combined, 'WH125')), **signal), sigscale),
-    signal_label)
+#channels['ltt']['wz'] = Style(Getter(ltt_combined, 'WZ', 'WZ'), **main_irreducible)
+#channels['ltt']['zz'] = Style(Getter(ltt_combined, 'ZZ', 'ZZ'), **next_irreducible)
+#channels['ltt']['fakes'] = Style(Getter(ltt_combined, 'FakeRate', 'Non-prompt'), **fakes)
+#channels['ltt']['signal'] = Title(ScaleView(
+    #Style(Sum(Getter(ltt_combined, 'WH125')), **signal), sigscale),
+    #signal_label)
 
 channels['zh']['zz'] = Style(Getter(zh_combined, 'ZZ', 'ZZ'), **next_irreducible)
 channels['zh']['fakes'] = Style(Getter(zh_combined, 'Zjets', 'Non-prompt'), **fakes)
@@ -159,8 +159,8 @@ channels['zh']['signal'] = Title(ScaleView(Style(
 llt_stack = views.StackView(
     *[channels['llt'][x] for x in ['zz', 'wz', 'fakes', 'signal']])
 
-ltt_stack = views.StackView(
-    *[channels['ltt'][x] for x in ['zz', 'wz', 'fakes', 'signal']])
+#ltt_stack = views.StackView(
+    #*[channels['ltt'][x] for x in ['zz', 'wz', 'fakes', 'signal']])
 
 zh_stack = views.StackView(
     *[channels['zh'][x] for x in ['zz', 'fakes', 'signal']])
@@ -188,19 +188,19 @@ vh_legend.Draw()
 canvas.Update()
 canvas.SaveAs('llt.pdf')
 
-# Draw LTT
-vh_legend = make_a_legend()
-ltt = ltt_stack.Get(None)
-ltt.Draw()
-ltt.Draw()
-ltt.GetHistogram().GetXaxis().SetRangeUser(0, 200)
-ltt.GetHistogram().GetXaxis().SetTitle("m_{vis} (GeV)")
-ltt.GetHistogram().GetYaxis().SetTitle("Events")
-blurb = add_cms_blurb('7+8', '10.0')
-vh_legend.AddEntry(ltt)
-vh_legend.Draw()
-canvas.Update()
-canvas.SaveAs('ltt.pdf')
+## Draw LTT
+#vh_legend = make_a_legend()
+#ltt = ltt_stack.Get(None)
+#ltt.Draw()
+#ltt.Draw()
+#ltt.GetHistogram().GetXaxis().SetRangeUser(0, 200)
+#ltt.GetHistogram().GetXaxis().SetTitle("m_{vis} (GeV)")
+#ltt.GetHistogram().GetYaxis().SetTitle("Events")
+#blurb = add_cms_blurb('7+8', '10.0')
+#vh_legend.AddEntry(ltt)
+#vh_legend.Draw()
+#canvas.Update()
+#canvas.SaveAs('ltt.pdf')
 
 vh_legend = make_a_legend(4)
 zh = zh_stack.Get(None)
@@ -215,7 +215,7 @@ canvas.Update()
 canvas.SaveAs('zh.pdf')
 
 # Make tau_h tau_h plots
-tt = io.open('UPDATE-LIMITS/cmb/common/htt_tt.input_8TeV.root')
+tt = io.open('NEW-LIMITS/cmb/common/htt_tt.input_8TeV.root')
 
 from FinalStateAnalysis.PlotTools.BlindView import BlindView, blind_in_range
 
