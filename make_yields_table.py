@@ -10,7 +10,7 @@ import pprint
 import string
 
 # Get the combination of all new channels
-megacard = DataCard('UPDATE-LIMITS/cmb/125/megacard.txt')
+megacard = DataCard('megacard_125.txt')
 
 # Store yields for various processes
 yields = {
@@ -32,12 +32,12 @@ yields['llt']['VH'] = megacard.get_rate('llt*', 'VH', excludebin=llt_exclude)
 yields['llt']['VHww'] = 0
 yields['llt']['total'] = yields['llt']['wz'] + yields['llt']['zz'] + yields['llt']['fakes']
 
-yields['ltt']['wz'] = megacard.get_rate('ltt*', 'wz')
-yields['ltt']['zz'] = megacard.get_rate('ltt*', 'zz')
-yields['ltt']['fakes'] = megacard.get_rate('ltt*', 'fakes')
-yields['ltt']['VH'] = megacard.get_rate('ltt*', 'VH')
-yields['ltt']['VHww'] = 0
-yields['ltt']['total'] = yields['ltt']['wz'] + yields['ltt']['zz'] + yields['ltt']['fakes']
+#yields['ltt']['wz'] = megacard.get_rate('ltt*', 'wz')
+#yields['ltt']['zz'] = megacard.get_rate('ltt*', 'zz')
+#yields['ltt']['fakes'] = megacard.get_rate('ltt*', 'fakes')
+#yields['ltt']['VH'] = megacard.get_rate('ltt*', 'VH')
+#yields['ltt']['VHww'] = 0
+#yields['ltt']['total'] = yields['ltt']['wz'] + yields['ltt']['zz'] + yields['ltt']['fakes']
 
 yields['zh']['zz'] = megacard.get_rate('ZH*', 'ZZ')
 yields['zh']['fakes'] = megacard.get_rate('ZH*', 'Zjets')
@@ -84,21 +84,21 @@ for channel, channel_info in yields.iteritems():
         flat[channel + process] = render(process_yield)
 
 vh_template = r'''
-    \begin{tabular}{l | c | c | c}
-      Process & $$\ell \ell \tau_h$$ & $$\ell \tau_h \tau_h$$  & $$ 4L $$ \\
+    \begin{tabular}{l | c | c}
+      Process & $$\ell \ell \tau_h$$  & $$ 4L $$ \\
       \hline
-      Fakes & $lltfakes & $lttfakes & \multirow{2}{*}{$zhfakes} \\
-      WZ & $lltwz & $lttwz & \\
+      Fakes & $lltfakes & \multirow{2}{*}{$zhfakes} \\
+      WZ & $lltwz & \\
       \hline
-      ZZ & $lltzz & $lttzz &  $zhzz \\
+      ZZ & $lltzz & $zhzz \\
       \hline
       \hline
-      Total bkg. &  $llttotal & $ltttotal & $zhtotal \\
+      Total bkg. &  $llttotal & $zhtotal \\
       \hline
-      VH$$\to\tau\tau (m_H=125\GeV)$$ & $lltVH & $lttVH & $zhVH \\
-      VH$$\to WW (m_H=125\GeV)$$ & $lltVHww & $lttVHww & $zhVHww \\
+      VH$$\to\tau\tau (m_H=125\GeV)$$ & $lltVH & $zhVH \\
+      VH$$\to WW (m_H=125\GeV)$$ & $lltVHww & $zhVHww \\
       \hline
-      Observed & & & \\
+      Observed & & \\
     \end{tabular}
 '''
 
