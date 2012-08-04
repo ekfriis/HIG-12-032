@@ -134,8 +134,11 @@ signal_label = '(5#times) VH125'
 channels['llt']['wz'] = Style(Getter(llt_combined, 'wz', 'WZ'), **main_irreducible)
 channels['llt']['zz'] = Style(Getter(llt_combined, 'zz', 'ZZ'), **next_irreducible)
 channels['llt']['fakes'] = Style(Getter(llt_combined, 'fakes', 'Non-prompt'), **fakes)
-channels['llt']['signal'] = Title(ScaleView(
-    Style(Sum(Getter(llt_combined, 'VH125')), **signal), sigscale),
+channels['llt']['signal'] = Title(ScaleView(Style(
+    Sum(
+        Getter(zh_combined, 'VH125'),
+        Getter(zh_combined, 'VH_hww125'),
+    ), **signal), sigscale),
     signal_label)
 
 
