@@ -136,8 +136,8 @@ channels['llt']['zz'] = Style(Getter(llt_combined, 'zz', 'ZZ'), **next_irreducib
 channels['llt']['fakes'] = Style(Getter(llt_combined, 'fakes', 'Non-prompt'), **fakes)
 channels['llt']['signal'] = Title(ScaleView(Style(
     Sum(
-        Getter(zh_combined, 'VH125'),
-        Getter(zh_combined, 'VH_hww125'),
+        Getter(llt_combined, 'VH125'),
+        Getter(llt_combined, 'VH_hww125'),
     ), **signal), sigscale),
     signal_label)
 
