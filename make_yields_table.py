@@ -29,7 +29,7 @@ yields['llt']['wz'] = megacard.get_rate('llt*', 'wz', excludebin=llt_exclude)
 yields['llt']['zz'] = megacard.get_rate('llt*', 'zz', excludebin=llt_exclude)
 yields['llt']['fakes'] = megacard.get_rate('llt*', 'fakes', excludebin=llt_exclude)
 yields['llt']['VH'] = megacard.get_rate('llt*', 'VH', excludebin=llt_exclude)
-yields['llt']['VHww'] = 0
+yields['llt']['VHww'] = megacard.get_rate('llt*', 'VH_hww', excludebin=llt_exclude)
 yields['llt']['total'] = yields['llt']['wz'] + yields['llt']['zz'] + yields['llt']['fakes']
 
 #yields['ltt']['wz'] = megacard.get_rate('ltt*', 'wz')
@@ -85,7 +85,7 @@ for channel, channel_info in yields.iteritems():
 
 vh_template = r'''
     \begin{tabular}{l | c | c}
-      Process & $$\ell \ell \tau_h$$  & $$ 4L $$ \\
+      Process & $$\ell \ell \tau_h$$  & $$ \ell\ell LL $$ \\
       \hline
       Fakes & $lltfakes & \multirow{2}{*}{$zhfakes} \\
       WZ & $lltwz & \\
