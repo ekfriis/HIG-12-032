@@ -6,7 +6,8 @@ def make_task(directory)
   inputs = Dir.glob("#{directory}/*.txt")
   file output => inputs do |t|
     puts t.investigation
-    sh "limit.py --expectedOnly --asymptotic --userOpt '-t -1 --minosAlgo stepping' #{directory}"
+    #sh "limit.py --expectedOnly --asymptotic --userOpt '-t -1 --minosAlgo stepping' #{directory}"
+    sh "limit.py --asymptotic --userOpt '--minosAlgo stepping' #{directory}"
   end
   return output
 end
