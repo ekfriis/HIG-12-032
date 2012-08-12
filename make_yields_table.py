@@ -31,6 +31,7 @@ yields['llt']['fakes'] = megacard.get_rate('llt*', 'fakes', excludebin=llt_exclu
 yields['llt']['VH'] = megacard.get_rate('llt*', 'VH', excludebin=llt_exclude)
 yields['llt']['VHww'] = megacard.get_rate('llt*', 'VH_hww', excludebin=llt_exclude)
 yields['llt']['total'] = yields['llt']['wz'] + yields['llt']['zz'] + yields['llt']['fakes']
+yields['llt']['obs'] = megacard.get_obs('llt*')
 
 #yields['ltt']['wz'] = megacard.get_rate('ltt*', 'wz')
 #yields['ltt']['zz'] = megacard.get_rate('ltt*', 'zz')
@@ -44,6 +45,7 @@ yields['zh']['fakes'] = megacard.get_rate('ZH*', 'Zjets')
 yields['zh']['VH'] = megacard.get_rate('ZH*', 'VH')
 yields['zh']['VHww'] = megacard.get_rate('ZH*', 'VH_hww')
 yields['zh']['total'] = yields['zh']['zz'] + yields['zh']['fakes']
+yields['zh']['obs'] = megacard.get_obs('ZH*')
 
 yields['boost']['fakes'] = megacard.get_rate('boost*', 'QCD')
 yields['boost']['ZTT'] = megacard.get_rate('boost*', 'ZTT')
@@ -57,6 +59,7 @@ yields['boost']['ggH'] = megacard.get_rate('boost*', 'ggH')
 yields['boost']['qqH'] = megacard.get_rate('boost*', 'qqH')
 yields['boost']['total'] = sum(
     yields['boost'][x] for x in ['fakes', 'ZJ', 'ZL', 'TT', 'VV', 'W', 'ZTT'])
+yields['boost']['obs'] = megacard.get_obs('boost*')
 
 yields['vbf']['fakes'] = megacard.get_rate('vbf*', 'QCD')
 yields['vbf']['ZTT'] = megacard.get_rate('vbf*', 'ZTT')
@@ -70,10 +73,13 @@ yields['vbf']['ggH'] = megacard.get_rate('vbf*', 'ggH')
 yields['vbf']['qqH'] = megacard.get_rate('vbf*', 'qqH')
 yields['vbf']['total'] = sum(
     yields['vbf'][x] for x in ['fakes', 'ZJ', 'ZL', 'TT', 'VV', 'W', 'ZTT'])
+yields['vbf']['obs'] = megacard.get_obs('vbf*')
 
 def render(the_yield):
     if isinstance(the_yield, int):
         return str(the_yield)
+    elif isinstance(the_yield, float):
+        return "%0.f" % the_yield
     return r'$ %0.2f \pm %0.2f $' % (the_yield.nominal_value,
                                        the_yield.std_dev())
 
@@ -98,7 +104,7 @@ vh_template = r'''
       VH$$\to\tau\tau (m_H=125\GeV)$$ & $lltVH & $zhVH \\
       VH$$\to WW (m_H=125\GeV)$$ & $lltVHww & $zhVHww \\
       \hline
-      Observed & & \\
+      Observed $lltobs & $zhobs & \\
     \end{tabular}
 '''
 
