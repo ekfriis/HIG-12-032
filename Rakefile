@@ -2,15 +2,29 @@
 # Task to run a limit
 def make_task(directory)
   mass = File.basename(directory)
-  output = "#{directory}/higgsCombine-exp.Asymptotic.mH#{mass}.root"
+  output_asymp = "#{directory}/higgsCombine-exp.Asymptotic.mH#{mass}.root"
   inputs = Dir.glob("#{directory}/*.txt")
-  file output => inputs do |t|
+  file output_asymp => inputs do |t|
     puts t.investigation
     #sh "limit.py --expectedOnly --asymptotic --userOpt '-t -1 --minosAlgo stepping' #{directory}"
     sh "limit.py --asymptotic --userOpt '--minosAlgo stepping' #{directory}"
   end
-  return output
+
+  return output_asymp
 end
+
+def make_cls_task(directory)
+  mass = File.basename(directory)
+  output_cls = "#{directory}/higgsCombineTest.HybridNew.mH#{mass}.root"
+  inputs = Dir.glob("#{directory}/*.txt")
+  file output_cls => inputs do |t|
+    puts t.investigation
+    #sh "limit.py --expectedOnly --asymptotic --userOpt '-t -1 --minosAlgo stepping' #{directory}"
+    sh "limit.py --CLs #{directory}"
+  end
+  return output_cls
+end
+
 
 masses = Array[115, 120, 125, 130, 135, 140]
 
@@ -26,26 +40,16 @@ masses.each do |mass|
   multitask :megalimits => make_task("ALL-LIMITS/cmb/#{mass}")
 end
 
-task :newplots => [] do |t|
-  chdir('NEW-LIMITS') do 
-    #sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_vhtt_layout.py ltt"
-    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_vhtt_layout.py llt"
-    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_vhtt_layout.py cmb"
-    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_vhtt_layout.py 4l"
-    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_vhtt_layout.py tt"
-  end
-end
+multitask :newclslimits=> []
 
-task :oldplots => [] do |t|
-  chdir('STANDARD-LIMITS') do 
-    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_htt_layout.py cmb"
-  end
-end
-
-task :megaplots => [] do |t|
-  chdir('ALL-LIMITS') do 
-    sh "plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_htt_layout.py cmb"
-  end
+masses.each do |mass|
+  multitask :newclslimits=> make_cls_task("NEW-LIMITS/cmb/#{mass}")
+  #multitask :newclslimits=> make_cls_task("NEW-LIMITS/ltt/#{mass}")
+  multitask :newclslimits=> make_cls_task("NEW-LIMITS/llt/#{mass}")
+  multitask :newclslimits=> make_cls_task("NEW-LIMITS/4l/#{mass}")
+  multitask :newclslimits=> make_cls_task("NEW-LIMITS/tt/#{mass}")
+  multitask :oldclslimits=> make_cls_task("STANDARD-LIMITS/cmb/#{mass}")
+  multitask :megaclslimits=> make_cls_task("ALL-LIMITS/cmb/#{mass}")
 end
 
 class Task 

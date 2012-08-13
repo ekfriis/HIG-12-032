@@ -127,7 +127,7 @@ tt_template = r'''
       ggH$$\to\tau\tau (m_H=125\GeV)$$ & $boostggH & $vbfggH \\
       qqH$$\to\tau\tau (m_H=125\GeV)$$ & $boostqqH & $vbfqqH \\
       \hline
-      Observed & & \\
+      Observed $boostobs & $vbfobs & \\
     \end{tabular}
 '''
 

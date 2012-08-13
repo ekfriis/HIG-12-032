@@ -140,7 +140,7 @@ channels['llt']['signal'] = Title(ScaleView(Style(
         Getter(llt_combined, 'VH_hww125'),
     ), **signal), sigscale),
     signal_label)
-
+channels['llt']['obs'] = Style(Getter(llt_combined, 'data_obs', "Observed"), **data)
 
 #channels['ltt']['wz'] = Style(Getter(ltt_combined, 'WZ', 'WZ'), **main_irreducible)
 #channels['ltt']['zz'] = Style(Getter(ltt_combined, 'ZZ', 'ZZ'), **next_irreducible)
@@ -157,6 +157,7 @@ channels['zh']['signal'] = Title(ScaleView(Style(
         Getter(zh_combined, 'VH_hww125'),
     ), **signal), sigscale),
     signal_label)
+channels['zh']['obs'] = Style(Getter(zh_combined, 'data_obs', "Observed"), **data)
 
 
 llt_stack = views.StackView(
@@ -185,6 +186,8 @@ llt.Draw()
 llt.GetHistogram().GetXaxis().SetRangeUser(0, 200)
 llt.GetHistogram().GetXaxis().SetTitle("m_{vis} (GeV)")
 llt.GetHistogram().GetYaxis().SetTitle("Events")
+llt_data = channels['llt']['obs'].Get(None)
+llt_data.Draw('same, pe')
 blurb = add_cms_blurb('7+8', '8-9')
 vh_legend.AddEntry(llt)
 vh_legend.Draw()
@@ -212,6 +215,8 @@ zh.GetHistogram().GetXaxis().SetRangeUser(0, 200)
 zh.GetHistogram().GetXaxis().SetTitle("m_{vis} (GeV)")
 zh.GetHistogram().GetYaxis().SetTitle("Events")
 blurb = add_cms_blurb('7+8', '10.0')
+zh_data = channels['zh']['obs'].Get(None)
+zh_data.Draw('same, pe')
 vh_legend.AddEntry(zh)
 vh_legend.Draw()
 canvas.Update()
@@ -220,13 +225,17 @@ canvas.SaveAs('zh.pdf')
 # Make tau_h tau_h plots
 tt = io.open('NEW-LIMITS/cmb/common/htt_tt.input_8TeV.root')
 
-from FinalStateAnalysis.PlotTools.BlindView import BlindView, blind_in_range
+#from FinalStateAnalysis.PlotTools.BlindView import BlindView, blind_in_range
 
-boost = BlindView(Subdir(tt, 'tauTau_boost'), '.*data_obs',
-                  blinding=blind_in_range(100, 140))
+#boost = BlindView(Subdir(tt, 'tauTau_boost'), '.*data_obs',
+                  #blinding=blind_in_range(100, 140))
 
-vbf = BlindView(Subdir(tt, 'tauTau_vbf'), '.*data_obs',
-                blinding=blind_in_range(100, 140))
+#vbf = BlindView(Subdir(tt, 'tauTau_vbf'), '.*data_obs',
+                #blinding=blind_in_range(100, 140))
+
+boost = Subdir(tt, 'tauTau_boost')
+
+vbf = Subdir(tt, 'tauTau_vbf')
 
 channels['boost']['ztt'] = Style(Getter(boost, 'ZTT', 'Z #rightarrow #tau#tau'), **main_irreducible)
 channels['boost']['data'] = Style(Getter(boost, 'data_obs', 'Observed'), **data)
@@ -239,6 +248,7 @@ channels['boost']['ewk'] = Style(Sum(
 channels['boost']['qcd'] = Style(Getter(boost, 'QCD', 'Multijet'), **fakes)
 channels['boost']['ttbar'] = Style(Getter(boost, 'TT', 'ttbar'), **third_irreducible)
 channels['boost']['signal'] = Style(ScaleView(Sum(
+                #blinding=blind_in_range(100, 140))
     Getter(boost, 'ggH125', '(5#times) H125'),
     Getter(boost, 'qqH125', '(5#times) H125'),
     Getter(boost, 'VH125', '(5#times) H125')), 5), **signal)
@@ -251,6 +261,7 @@ boost = boost_stack.Get(None)
 boost.Draw()
 boost_data = channels['boost']['data'].Get(None)
 boost_data.Draw('same,pe')
+boost.SetMaximum(1.2*max(boost.GetMaximum(), boost_data.GetMaximum()))
 boost.GetHistogram().GetXaxis().SetRangeUser(0, 300)
 boost.GetHistogram().GetXaxis().SetTitle("m_{#tau#tau} (GeV)")
 boost.GetHistogram().GetYaxis().SetTitle("Events")
