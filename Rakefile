@@ -16,7 +16,7 @@ end
 def make_cls_task(directory)
   mass = File.basename(directory)
   output_cls = "#{directory}/higgsCombineTest.HybridNew.mH#{mass}.root"
-  inputs = Dir.glob("#{directory}/*.txt")
+  inputs = Dir.glob("#{directory}/*.txt") + Dir.glob("#{directory}/crab*/res/*root")
   file output_cls => inputs do |t|
     puts t.investigation
     #sh "limit.py --expectedOnly --asymptotic --userOpt '-t -1 --minosAlgo stepping' #{directory}"

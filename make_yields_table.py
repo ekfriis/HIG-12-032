@@ -5,7 +5,7 @@ Build yields for HIG-12-032 results table using data card.
 
 '''
 
-from FinalStateAnalysis.StatTools.DataCard import DataCard
+from DataCard import DataCard
 import pprint
 import string
 
@@ -101,10 +101,10 @@ vh_template = r'''
       \hline
       Total bkg. &  $llttotal & $zhtotal \\
       \hline
-      VH$$\to\tau\tau (m_H=125\GeV)$$ & $lltVH & $zhVH \\
-      VH$$\to WW (m_H=125\GeV)$$ & $lltVHww & $zhVHww \\
+      VH$$\to$$V$$\tau\tau (m_H=125\GeV)$$ & $lltVH & $zhVH \\
+      VH$$\to$$VWW $$(m_H=125\GeV)$$ & $lltVHww & $zhVHww \\
       \hline
-      Observed $lltobs & $zhobs & \\
+      Observed & $lltobs & $zhobs  \\
     \end{tabular}
 '''
 
@@ -123,11 +123,11 @@ tt_template = r'''
       \hline
       Total bkg. &  $boosttotal & $vbftotal \\
       \hline
-      VH$$\to\tau\tau (m_H=125\GeV)$$ & $boostVH & $vbfVH \\
-      ggH$$\to\tau\tau (m_H=125\GeV)$$ & $boostggH & $vbfggH \\
-      qqH$$\to\tau\tau (m_H=125\GeV)$$ & $boostqqH & $vbfqqH \\
+      VH$$\to$$V$$\tau\tau (m_H=125\GeV)$$ & $boostVH & $vbfVH \\
+      ggH$$\to$$gg$$\tau\tau (m_H=125\GeV)$$ & $boostggH & $vbfggH \\
+      qqH$$\to$$qq$$\tau\tau (m_H=125\GeV)$$ & $boostqqH & $vbfqqH \\
       \hline
-      Observed $boostobs & $vbfobs & \\
+      Observed & $boostobs & $vbfobs \\
     \end{tabular}
 '''
 

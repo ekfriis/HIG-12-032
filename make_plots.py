@@ -6,6 +6,7 @@ Build plots for HIG-12-032 results.
 
 from rootpy.plotting import views, Legend
 import rootpy.io as io
+import glob
 import ROOT
 
 def add_cms_blurb(sqrts, intlumi, preliminary=True):
@@ -31,8 +32,9 @@ vh_combined = views.SumView(vh_7TeV, vh_8TeV)
 llt_combined = views.SumView(*[
     views.SubdirectoryView(vh_combined, x) for x in ['emt', 'mmt', ]])
 
+# We have to get the shape versions of these from a separate root file.
 zh_combined = views.SumView(*[
-    views.SubdirectoryView(vh_combined, x) for x in [
+    views.SubdirectoryView(io.open('zh_with_shapes.root'), x) for x in [
         'eeem_zh', 'eeet_zh', 'eemt_zh', 'eett_zh',
         'mmme_zh', 'mmet_zh', 'mmmt_zh', 'mmtt_zh',
     ]])
@@ -159,6 +161,11 @@ channels['zh']['signal'] = Title(ScaleView(Style(
     signal_label)
 channels['zh']['obs'] = Style(Getter(zh_combined, 'data_obs', "Observed"), **data)
 
+print "ZH overflow check"
+zh_fakes = channels['zh']['fakes'].Get(None)
+print zh_fakes.GetBinContent(zh_fakes.GetNbinsX())
+print zh_fakes.GetBinContent(0)
+print zh_fakes.Integral()
 
 llt_stack = views.StackView(
     *[channels['llt'][x] for x in ['zz', 'wz', 'fakes', 'signal']])
