@@ -65,7 +65,7 @@ main_irreducible = {
     'fillstyle' : 1001,
     'fillcolor' : '#FFCC66',
     'linecolor' : '#000000',
-    'linewidth' : 2,
+    'linewidth' : 3,
 }
 next_irreducible = {
     'legendstyle' : 'f',
@@ -74,7 +74,7 @@ next_irreducible = {
     'fillstyle' : 1001,
     'fillcolor' : '#990000',
     'linecolor' : '#000000',
-    'linewidth' : 2,
+    'linewidth' : 3,
 }
 third_irreducible = {
     'legendstyle' : 'f',
@@ -83,7 +83,7 @@ third_irreducible = {
     'fillstyle' : 1001,
     'fillcolor' : '#9999CC',
     'linecolor' : '#000000',
-    'linewidth' : 2,
+    'linewidth' : 3,
 }
 fakes = {
     'legendstyle' : 'f',
@@ -92,7 +92,7 @@ fakes = {
     'fillcolor' : '#FFCCFF',
     'linecolor' : '#000000',
     'fillstyle' : 1001,
-    'linewidth' : 2,
+    'linewidth' : 3,
 }
 signal = {
     'legendstyle' : 'f',
@@ -107,11 +107,13 @@ signal = {
 data =  {
     'markerstyle' : 20,
     'markersize' : 3,
+    'linewidth' : 2,
     'markercolor' : '#000000',
     'legendstyle' : 'pe',
     'format' : 'pe',
     'name' : "Observed",
 }
+
 
 Style = views.StyleView
 Subdir = views.SubdirectoryView
@@ -120,6 +122,11 @@ Title = views.TitleView
 ScaleView = views.ScaleView
 sigscale = 5
 
+def set_line_width(x):
+    x.SetLineWidth(2)
+    print "Setting line width"
+    return x
+
 # stupid hack to get always get a given histogram no matter what the Get(x) is
 def Getter(view, histoname, title=None):
     def doot(x):
@@ -127,11 +134,11 @@ def Getter(view, histoname, title=None):
         return histoname
 
     if title is not None:
-        return views.TitleView(views.PathModifierView(view, doot), title)
+        return views.FunctorView(views.TitleView(views.PathModifierView(view, doot), title), set_line_width)
     else:
-        return views.PathModifierView(view, doot)
+        return views.FunctorView(views.PathModifierView(view, doot), set_line_width)
 
-signal_label = '(5#times) VH125'
+signal_label = '(5#times) m_{H}=125 GeV'
 
 channels['llt']['wz'] = Style(Getter(llt_combined, 'wz', 'WZ'), **main_irreducible)
 channels['llt']['zz'] = Style(Getter(llt_combined, 'zz', 'ZZ'), **next_irreducible)
@@ -180,7 +187,7 @@ canvas = ROOT.TCanvas("asdf", "asdf", 800, 800)
 
 def make_a_legend(entries=5):
     vh_legend = Legend(
-        entries, rightmargin=0.07, topmargin=0.05, leftmargin=0.40)
+        entries, rightmargin=0.26, topmargin=0.05, leftmargin=0.375)
     vh_legend.SetEntrySeparation(0.0)
     vh_legend.SetMargin(0.35)
     vh_legend.SetBorderSize(0)
@@ -191,9 +198,10 @@ vh_legend = make_a_legend()
 llt = llt_stack.Get(None)
 llt.Draw()
 llt.GetHistogram().GetXaxis().SetRangeUser(0, 200)
-llt.GetHistogram().GetXaxis().SetTitle("m_{vis} (GeV)")
+llt.GetHistogram().GetXaxis().SetTitle("m_{vis} [GeV]")
 llt.GetHistogram().GetYaxis().SetTitle("Events")
 llt_data = channels['llt']['obs'].Get(None)
+llt.GetHistogram().GetYaxis().SetTitle("Events/%i GeV" % llt_data.GetBinWidth(1))
 llt_data.Draw('same, pe')
 blurb = add_cms_blurb('7+8', '8-9')
 vh_legend.AddEntry(llt)
@@ -207,7 +215,7 @@ canvas.SaveAs('llt.pdf')
 #ltt.Draw()
 #ltt.Draw()
 #ltt.GetHistogram().GetXaxis().SetRangeUser(0, 200)
-#ltt.GetHistogram().GetXaxis().SetTitle("m_{vis} (GeV)")
+#ltt.GetHistogram().GetXaxis().SetTitle("m_{vis} [GeV]")
 #ltt.GetHistogram().GetYaxis().SetTitle("Events")
 #blurb = add_cms_blurb('7+8', '10.0')
 #vh_legend.AddEntry(ltt)
@@ -219,11 +227,12 @@ vh_legend = make_a_legend(4)
 zh = zh_stack.Get(None)
 zh.Draw()
 zh.GetHistogram().GetXaxis().SetRangeUser(0, 200)
-zh.GetHistogram().GetXaxis().SetTitle("m_{vis} (GeV)")
+zh.GetHistogram().GetXaxis().SetTitle("m_{vis} [GeV]")
 zh.GetHistogram().GetYaxis().SetTitle("Events")
 blurb = add_cms_blurb('7+8', '10.0')
 zh_data = channels['zh']['obs'].Get(None)
 zh_data.Draw('same, pe')
+zh.GetHistogram().GetYaxis().SetTitle("Events/%i GeV" % zh_data.GetBinWidth(1))
 vh_legend.AddEntry(zh)
 vh_legend.Draw()
 canvas.Update()
@@ -256,9 +265,9 @@ channels['boost']['qcd'] = Style(Getter(boost, 'QCD', 'Multijet'), **fakes)
 channels['boost']['ttbar'] = Style(Getter(boost, 'TT', 'ttbar'), **third_irreducible)
 channels['boost']['signal'] = Style(ScaleView(Sum(
                 #blinding=blind_in_range(100, 140))
-    Getter(boost, 'ggH125', '(5#times) H125'),
-    Getter(boost, 'qqH125', '(5#times) H125'),
-    Getter(boost, 'VH125', '(5#times) H125')), 5), **signal)
+    Getter(boost, 'ggH125', '(5#times) m_{H}=125 GeV'),
+    Getter(boost, 'qqH125', '(5#times) m_{H}=125 GeV'),
+    Getter(boost, 'VH125', '(5#times) m_{H}=125 GeV')), 5), **signal)
 
 boost_stack = views.StackView(
     *[channels['boost'][x] for x in ['ttbar', 'ewk', 'qcd', 'ztt', 'signal']])
@@ -270,8 +279,8 @@ boost_data = channels['boost']['data'].Get(None)
 boost_data.Draw('same,pe')
 boost.SetMaximum(1.2*max(boost.GetMaximum(), boost_data.GetMaximum()))
 boost.GetHistogram().GetXaxis().SetRangeUser(0, 300)
-boost.GetHistogram().GetXaxis().SetTitle("m_{#tau#tau} (GeV)")
-boost.GetHistogram().GetYaxis().SetTitle("Events")
+boost.GetHistogram().GetXaxis().SetTitle("m_{#tau#tau} [GeV]")
+boost.GetHistogram().GetYaxis().SetTitle("Events/%i GeV" % boost_data.GetBinWidth(1))
 blurb = add_cms_blurb('8', '4.9')
 legend.AddEntry(boost_data)
 legend.AddEntry(boost)
@@ -290,9 +299,9 @@ channels['vbf']['data'] = Style(Getter(vbf, 'data_obs', 'Observed'), **data)
 channels['vbf']['qcd'] = Style(Getter(vbf, 'QCD', 'Multijet'), **fakes)
 channels['vbf']['ttbar'] = Style(Getter(vbf, 'TT', 'ttbar'), **third_irreducible)
 channels['vbf']['signal'] = Style(ScaleView(Sum(
-    Getter(vbf, 'ggH125', '(5#times) H125'),
-    Getter(vbf, 'qqH125', '(5#times) H125'),
-    Getter(vbf, 'VH125', '(5#times) H125')), 5), **signal)
+    Getter(vbf, 'ggH125', '(5#times) m_{H}=125 GeV'),
+    Getter(vbf, 'qqH125', '(5#times) m_{H}=125 GeV'),
+    Getter(vbf, 'VH125', '(5#times) m_{H}=125 GeV')), 5), **signal)
 
 vbf_stack = views.StackView(
     *[channels['vbf'][x] for x in ['ttbar', 'ewk', 'qcd', 'ztt', 'signal']])
@@ -302,9 +311,9 @@ vbf = vbf_stack.Get(None)
 vbf.Draw()
 vbf_data = channels['vbf']['data'].Get(None)
 vbf_data.Draw('same,pe')
+vbf.GetHistogram().GetYaxis().SetTitle("Events/%i GeV" % vbf_data.GetBinWidth(1))
 vbf.GetHistogram().GetXaxis().SetRangeUser(0, 300)
-vbf.GetHistogram().GetXaxis().SetTitle("m_{#tau#tau} (GeV)")
-vbf.GetHistogram().GetYaxis().SetTitle("Events")
+vbf.GetHistogram().GetXaxis().SetTitle("m_{#tau#tau} [GeV]")
 blurb = add_cms_blurb('8', '4.9')
 legend.AddEntry(vbf_data)
 legend.AddEntry(vbf)
