@@ -36,6 +36,7 @@ masses.each do |mass|
   multitask :newlimits => make_task("NEW-LIMITS/llt/#{mass}")
   multitask :newlimits => make_task("NEW-LIMITS/4l/#{mass}")
   multitask :newlimits => make_task("NEW-LIMITS/tt/#{mass}")
+  multitask :injlimits => make_task("INJ-LIMITS/cmb/#{mass}")
   multitask :oldlimits => make_task("STANDARD-LIMITS/cmb/#{mass}")
   multitask :megalimits => make_task("ALL-LIMITS/cmb/#{mass}")
 end
