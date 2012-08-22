@@ -8,6 +8,7 @@ Build yields for HIG-12-032 results table using data card.
 from DataCard import DataCard
 import pprint
 import string
+import sigfigs
 
 # Get the combination of all new channels
 megacard = DataCard('megacard_125.txt')
@@ -80,8 +81,8 @@ def render(the_yield):
         return str(the_yield)
     elif isinstance(the_yield, float):
         return "%0.f" % the_yield
-    return r'$ %0.2f \pm %0.2f $' % (the_yield.nominal_value,
-                                       the_yield.std_dev())
+    return r'$ %s \pm %s $' % sigfigs.sigfigs(
+        the_yield.nominal_value, the_yield.std_dev(), 2, -2)
 
 # flatten dictionary and stringify yields
 flat = {}

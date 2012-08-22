@@ -15,3 +15,4 @@ root -b -q '../../HiggsAnalysis/HiggsToTauTau/macros/compareLimits.C+("limits_sm
 
 cd ../ALL-LIMITS
 plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_htt_layout.py cmb
+cp cmb_sm.pdf cmb_sm_asymp.pdf
