@@ -12,7 +12,13 @@ cp cmb_sm.pdf cmb_sm_asymp.pdf
 cp 4l_sm.pdf 4l_sm_asymp.pdf
 
 root -b -q '../../HiggsAnalysis/HiggsToTauTau/macros/compareLimits.C+("limits_sm.root", "cmb,tt,4l,llt", true, false, "sm-xsex", 0, 20, false)'
+root -b -q '../../HiggsAnalysis/HiggsToTauTau/macros/compareLimits.C+("limits_sm.root", "cmb,tt,4l,llt", false, true, "sm-xsex", 0, 20, false)'
 
 cd ../ALL-LIMITS
 plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_htt_layout.py cmb
 cp cmb_sm.pdf cmb_sm_asymp.pdf
+
+ln -s ../STANDARD-LIMITS/cmb HIG-12-018
+plot asymptotic $CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_htt_layout.py HIG-12-018
+root -b -q '../../HiggsAnalysis/HiggsToTauTau/macros/compareLimits.C+("limits_sm.root", "cmb,HIG-12-018", true, false, "sm-xsex", 0, 5, false)'
+root -b -q '../../HiggsAnalysis/HiggsToTauTau/macros/compareLimits.C+("limits_sm.root", "cmb,HIG-12-018", false, true, "sm-xsex", 0, 5, false)'

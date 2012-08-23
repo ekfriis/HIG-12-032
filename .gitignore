@@ -26,7 +26,6 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 
-*/
 *.tex
 *.pdf
 *.tgz
