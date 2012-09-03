@@ -9,7 +9,7 @@ import rootpy.io as io
 import glob
 import ROOT
 
-def add_cms_blurb(sqrts, intlumi, preliminary=True):
+def add_cms_blurb(sqrts, intlumi, preliminary=True, blurb=''):
     latex = ROOT.TLatex()
     latex.SetNDC();
     latex.SetTextSize(0.04);
@@ -19,8 +19,9 @@ def add_cms_blurb(sqrts, intlumi, preliminary=True):
     if preliminary:
         label_text += " Preliminary"
     label_text += " %s TeV" % sqrts
-    label_text += " %s fb^{-1}" % (intlumi)
-    return latex.DrawLatex(0.18,0.96, label_text);
+    label_text += " L=%sfb^{-1}" % (intlumi)
+    label_text += " " + blurb
+    return latex.DrawLatex(0.18,0.97, label_text);
 
 vh_7TeV = io.open('NEW-LIMITS/cmb/common/vhtt.input_7TeV.root')
 vh_8TeV = io.open('NEW-LIMITS/cmb/common/vhtt.input_8TeV.root')
@@ -100,7 +101,7 @@ signal = {
     'fillcolor' : 0,
     'fillstyle' : 0,
     'linestyle' : 2,
-    'linewidth' : 3,
+    'linewidth' : 5,
     'linecolor' : '#1C1C76',
     'name' : "VH",
 }
@@ -123,7 +124,7 @@ ScaleView = views.ScaleView
 sigscale = 5
 
 def set_line_width(x):
-    x.SetLineWidth(2)
+    x.SetLineWidth(3)
     print "Setting line width"
     return x
 
@@ -203,7 +204,8 @@ llt.GetHistogram().GetYaxis().SetTitle("Events")
 llt_data = channels['llt']['obs'].Get(None)
 llt.GetHistogram().GetYaxis().SetTitle("Events/%i GeV" % llt_data.GetBinWidth(1))
 llt_data.Draw('same, pe')
-blurb = add_cms_blurb('7+8', '10')
+blurb = add_cms_blurb('7-8', '10', blurb=' ll#tau_{h}')
+vh_legend.AddEntry(llt_data)
 vh_legend.AddEntry(llt)
 vh_legend.Draw()
 canvas.Update()
@@ -229,10 +231,11 @@ zh.Draw()
 zh.GetHistogram().GetXaxis().SetRangeUser(0, 200)
 zh.GetHistogram().GetXaxis().SetTitle("m_{vis} [GeV]")
 zh.GetHistogram().GetYaxis().SetTitle("Events")
-blurb = add_cms_blurb('7+8', '10')
+blurb = add_cms_blurb('7-8', '10', blurb='llLL')
 zh_data = channels['zh']['obs'].Get(None)
 zh_data.Draw('same, pe')
 zh.GetHistogram().GetYaxis().SetTitle("Events/%i GeV" % zh_data.GetBinWidth(1))
+vh_legend.AddEntry(zh_data)
 vh_legend.AddEntry(zh)
 vh_legend.Draw()
 canvas.Update()
@@ -281,7 +284,7 @@ boost.SetMaximum(1.2*max(boost.GetMaximum(), boost_data.GetMaximum()))
 boost.GetHistogram().GetXaxis().SetRangeUser(0, 300)
 boost.GetHistogram().GetXaxis().SetTitle("m_{#tau#tau} [GeV]")
 boost.GetHistogram().GetYaxis().SetTitle("Events/%i GeV" % boost_data.GetBinWidth(1))
-blurb = add_cms_blurb('8', '4.9')
+blurb = add_cms_blurb('8', '5')
 legend.AddEntry(boost_data)
 legend.AddEntry(boost)
 legend.Draw()
@@ -314,7 +317,7 @@ vbf_data.Draw('same,pe')
 vbf.GetHistogram().GetYaxis().SetTitle("Events/%i GeV" % vbf_data.GetBinWidth(1))
 vbf.GetHistogram().GetXaxis().SetRangeUser(0, 300)
 vbf.GetHistogram().GetXaxis().SetTitle("m_{#tau#tau} [GeV]")
-blurb = add_cms_blurb('8', '4.9')
+blurb = add_cms_blurb('8', '5')
 legend.AddEntry(vbf_data)
 legend.AddEntry(vbf)
 legend.Draw()
